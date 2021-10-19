@@ -40,6 +40,6 @@ Route::group(
     ],
     function ($router) {
        // Route::resource('todos', 'TodoController');
-        Route::resource('todos', 'IPController');
+        Route::resource('ip-list', 'IPController');
     }
 );

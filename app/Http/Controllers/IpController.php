@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Ip;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use DB;
 
 class IpController extends Controller
 {
-
+  protected $user;
     public function __construct()
     {
         $this->middleware('auth:api');
@@ -23,7 +26,8 @@ class IpController extends Controller
      */
     public function index()
     {
-        //
+        $todos = DB::table('ips')->get()->toArray();
+        return response()->json( $this->guard()->user());
     }
 
     /**
