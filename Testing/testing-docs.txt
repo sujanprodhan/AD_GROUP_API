@@ -1,0 +1,12 @@
+
+Open Postman:
+------------------
+1. Check login :
+------------------
+
+URL:  http://localhost:8000/api/auth/login
+Method: Post
+Param: 
+---------------------------
+email:sujanitbd@gmail.com
+pass: 123456
