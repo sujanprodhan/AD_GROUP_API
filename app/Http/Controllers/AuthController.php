@@ -36,7 +36,7 @@ class AuthController extends Controller
         $this->guard()->factory()->setTTL($token_validity);
 
         if (!$token = $this->guard()->attempt($validator->validated())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Unauthorized, please try with valid email and pass!!'], 401);
         }
 
         return $this->respondWithToken($token);
