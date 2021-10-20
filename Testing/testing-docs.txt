@@ -67,6 +67,17 @@ http://localhost:8000/api/ip-list
 
 }
 
+-----------------------------
+| Add new IP 
+-----------------------------
+Method: Post
+URL: http://localhost:8000/api/ip-list
+Data: {label: 'Ad-Group', ip:'161.102.211.204', 'description':'text')
+#Result:
+{
+    "status": true,
+    "message": "Successfully save new ip."
+}
 
 
 

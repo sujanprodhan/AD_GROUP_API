@@ -10,13 +10,11 @@ use DB;
 
 class IpController extends Controller
 {
-  protected $user;
     public function __construct()
     {
         $this->middleware('auth:api');
         $this->user = $this->guard()->user();
-
-    }//end __construct()
+    } //end __construct()
 
 
     /**
@@ -26,7 +24,7 @@ class IpController extends Controller
      */
     public function index()
     {
-        $ipList =DB::table('ips')->paginate(15);
+        $ipList = DB::table('ips')->paginate(15);
         return response()->json($ipList->toArray());
     }
 
@@ -48,7 +46,44 @@ class IpController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'label'     => 'required|string',
+                'ip'      => 'required|ip'
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'errors' => $validator->errors(),
+                ],
+                400
+            );
+        }
+
+        $ipReq            = new Ip();
+        $ipReq->label     = $request->label;
+        $ipReq->ip      = $request->ip;
+        $ipReq->description = $request->description;
+
+        if ($ipReq->save()) {
+            return response()->json(
+                [
+                    'status' => true,
+                    'message' => 'Successfully save new ip.',
+                ]
+            );
+        } else {
+            return response()->json(
+                [
+                    'status'  => false,
+                    'message' => 'Oops, the ip  could not be saved!',
+                ]
+            );
+        }
     }
 
     /**
@@ -100,7 +135,6 @@ class IpController extends Controller
     protected function guard()
     {
         return Auth::guard();
-
-    }//end guard()
+    } //end guard()
 
 }
