@@ -139,8 +139,66 @@ class IpController extends Controller
      */
     public function update(Request $request, Ip $ip)
     {
-        //
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'label'     => 'required|string',
+                'id' => 'required|integer',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'errors' => $validator->errors(),
+                ],
+                400
+            );
+        }
+
+        $ipTable            = new Ip();
+        $ipTable->label     = $request->label;
+        //$ipTable->ip      = $request->ip;
+        $ipTable->description = $request->description;
+
+        $ipTable->exists = true;
+        $ipTable->id = $request->id; //already exists in database.
+
+        if ($ipTable->save()) {
+            // Add log for audit table
+            $user = JWTAuth::parseToken()->authenticate();
+            $auditTable = new Audit();
+            $auditTable->user_id = $user->id; // Logged user id
+            $auditTable->ip_id = $ipTable->id; // ip table id
+            $auditTable->operation_type = "update"; // add or update type
+            $auditTable->description = "update label"; // add or update ip
+            $auditTable->save();
+            if ($auditTable->save()) {
+                return response()->json(
+                    [
+                        'status' => true,
+                        'message' => 'Successfully updated  ip label.',
+                    ]
+                );
+            } else {
+                return response()->json(
+                    [
+                        'status' => false,
+                        'message' => 'Failed!, audit log!',
+                    ]
+                );
+            }
+        } else {
+            return response()->json(
+                [
+                    'status'  => false,
+                    'message' => 'Sorry, the ip  could not be ipdated!',
+                ]
+            );
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
