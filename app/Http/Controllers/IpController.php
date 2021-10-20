@@ -116,7 +116,8 @@ class IpController extends Controller
      */
     public function show(Ip $ip)
     {
-        //
+        $audits = DB::table('audits')->paginate(15); // show-audit list 
+        return response()->json($audits->toArray());
     }
 
     /**
