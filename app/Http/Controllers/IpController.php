@@ -26,8 +26,8 @@ class IpController extends Controller
      */
     public function index()
     {
-        $todos = DB::table('ips')->get()->toArray();
-        return response()->json( $this->guard()->user());
+        $ipList =DB::table('ips')->paginate(15);
+        return response()->json($ipList->toArray());
     }
 
     /**
