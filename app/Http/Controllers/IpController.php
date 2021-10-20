@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ip;
+use App\Models\Audit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class IpController extends Controller
 {
@@ -64,18 +66,38 @@ class IpController extends Controller
             );
         }
 
-        $ipReq            = new Ip();
-        $ipReq->label     = $request->label;
-        $ipReq->ip      = $request->ip;
-        $ipReq->description = $request->description;
+        $ipTable            = new Ip();
+        $ipTable->label     = $request->label;
+        $ipTable->ip      = $request->ip;
+        $ipTable->description = $request->description;
 
-        if ($ipReq->save()) {
-            return response()->json(
-                [
-                    'status' => true,
-                    'message' => 'Successfully save new ip.',
-                ]
-            );
+        if ($ipTable->save()) {
+            // Add log for audit table
+            $user = JWTAuth::parseToken()->authenticate();
+            $auditTable = new Audit();
+            $auditTable->user_id = $user->id; // Logged user id
+            $auditTable->ip_id = $ipTable->id; // ip table id
+            $auditTable->operation_type = "add"; // add or update type
+            $auditTable->description = "add new ip"; // add or update ip
+            $auditTable->save();
+            if( $auditTable->save()){
+                return response()->json(
+                    [
+                        'status' => true,
+                        'message' => 'Successfully save new ip.',
+                    ]
+                );
+            }
+            else{
+                return response()->json(
+                    [
+                        'status' => false,
+                        'message' => 'Failed!, audit log!',
+                    ]
+                );
+            }
+
+
         } else {
             return response()->json(
                 [
@@ -136,5 +158,7 @@ class IpController extends Controller
     {
         return Auth::guard();
     } //end guard()
+
+
 
 }
