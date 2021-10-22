@@ -19,7 +19,7 @@ pass: 123456
 --------------------
 Method: Get
 
-http://localhost:8000/api/auth/profile?token='token-value.....'
+http://localhost:8000/api/auth/profile?
 
 Data: 
 {
