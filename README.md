@@ -37,7 +37,7 @@ Data:
 ---------------------------
 Method: post
 
-http://localhost:8000/api/auth/register?name=New User&email=newuser@gmail.com&password=pass1234&password_confirmation=pass1234
+http://localhost:8000/api/auth/register?name=NewUser&email=newuser@gmail.com&password=pass1234&password_confirmation=pass1234
 {
     "message": "User created successfully",
     "user": {
