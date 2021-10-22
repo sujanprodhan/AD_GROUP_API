@@ -26,7 +26,7 @@ class IpController extends Controller
      */
     public function index()
     {
-        $ipList = DB::table('ips')->paginate(15);
+        $ipList = DB::table('ips')->orderBy('id', 'desc')->paginate(20);
         return response()->json($ipList->toArray());
     }
 
@@ -116,7 +116,7 @@ class IpController extends Controller
      */
     public function show(Ip $ip)
     {
-        $audits = DB::table('audits')->paginate(15); // show-audit list 
+        $audits = DB::table('audits')->orderBy('id', 'desc')->paginate(50); // show-audit list 
         return response()->json($audits->toArray());
     }
 
